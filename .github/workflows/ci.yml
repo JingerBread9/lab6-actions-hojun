@@ -8,16 +8,14 @@ on:
 
 jobs:
   test:
-    runs-on: self-hosted # edited to run on self-hosted runner
+    runs-on: self-hosted
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Show Python
+        run: python3 --version
 
       - name: Install dependencies
         run: |
@@ -29,8 +27,8 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
         run: |
           python -m pytest -q --cov=prediction_pipeline_demo --cov-report=term-missing --cov-fail-under=70
-      
-      # TODO: Add a step here to run the demo pipeline end-to-end
-      # The goal is to execute prediction_pipeline_demo.py so CI logs show the model’s R^2 score.
+
       - name: Run ML demo pipeline
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: python prediction_pipeline_demo.py
